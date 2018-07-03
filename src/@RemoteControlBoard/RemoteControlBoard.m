@@ -33,7 +33,7 @@ classdef RemoteControlBoard < handle
             % Check that port is registered
             if system(['yarp name query /' robotYarpPortPrefix '/' part '/stateExt:o'])
                 warning('Port not registered!! skipping...');
-                obj.driver = NaN;
+                obj.driver = [];
             else
                 obj.driver = yarp.PolyDriver();
                 if (~obj.driver.open(obj.options))
@@ -67,7 +67,7 @@ classdef RemoteControlBoard < handle
         
         % Destructor
         function delete(obj)
-            if ~isnan(obj.driver)
+            if ~isempty(obj.driver)
                 obj.driver.close();
             end
         end

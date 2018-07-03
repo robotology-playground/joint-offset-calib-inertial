@@ -36,7 +36,7 @@ end
 % If the figure is not docked, use the below command to display it full
 % screen.
 %set(gcf,'PositionMode','manual','Units','normalized','outerposition',[0 0 1 1]);
-title(aTitle,'FontWeight','bold');
+title(aTitle,'FontWeight','bold','Interpreter','latex');
 grid on;
 xlabel('Time (sec)');
 ylabel(yLabel);
