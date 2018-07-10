@@ -6,7 +6,6 @@ dumper/
 *.mat
 data/
 html/
-doc/
 tmp/
 wiki/
 matlab-workspace
