@@ -1,4 +1,4 @@
-function seqParams = setValFromGrid(gridBuilder,gridParams,acqVel,transVel,labels)
+function seqParams = setValFromGrid(gridBuilder,gridParams,acqVel,transVel,labels,robotModel)
 
 % parse the grid parameters (creates vars 'part1','joint1','part2'...)
 q1params = cell2struct(gridParams(2,:),gridParams(1,:),2);
@@ -23,7 +23,7 @@ seq = cellfun(@(cellX,cellY) [cellX;cellY],seqX,seqY,'UniformOutput',false);
 % Reshape the data for setting ['ctrl','pos','<part>'] and ['ctrl','vel','<part>']
 % colums of 'seqParams':
 % - first init to all zeros
-jointsList = RobotModel.jointsListFromPart(part);
+jointsList = robotModel.jointsDbase.getJointNames(part);
 ctrlPos = zeros(length(q1),length(jointsList));
 ctrlVel = ctrlPos;
 % - select columns for the controlled joints

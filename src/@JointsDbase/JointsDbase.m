@@ -40,7 +40,8 @@ classdef JointsDbase < DataBase
                 
                 % This joint might be coupled with other joints to a set of motors.
                 % Retrieve the respective joints/motors coupling information
-                if DoF>0
+                isModelOnline = RobotModel.isOnline;
+                if (DoF>0 && isModelOnline.value)
                     [parentCoupling,idxInCtrlBoardServer,cpldMotorSharingIdx,gearboxDqM2Jratio,fullscalePWM] = ...
                         JointsDbase.getJMcouplingFromCtrlBoard(joint2coupling,robotYarpPortPrefix,part,jointName);
                 else

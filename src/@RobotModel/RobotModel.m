@@ -17,6 +17,10 @@ classdef RobotModel < handle
     %   The model also holds the sensor calibration parameters and the
     %   joint/motor parameters (PWM to torque rate, friction parameters, ...).
     
+    properties(Constant = true, Access = public)
+        isOnline@System.Buffer = System.Buffer(true);
+    end
+    
     properties(GetAccess = public, SetAccess = protected)
         robotEnvNames@struct;
         urdfModelFile@char;

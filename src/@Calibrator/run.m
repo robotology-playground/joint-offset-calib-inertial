@@ -18,7 +18,7 @@ if init.runDiagnosis
         path,sensors,parts,model,taskSpec,... % actual params passed through the func handle
         obj.figuresHandlerMap,obj.task);              % params specific to this calibrator
     % Run diagnosis plotters for all acquired data, so for each acquired data accessor.
-    runCalibratorOrDiagnosis(init,model,diagFuncH,obj.calibedSensorType);
+    obj.runCalibratorOrDiagnosis(init,model,diagFuncH,obj.calibedSensorType);
 end
 
 end

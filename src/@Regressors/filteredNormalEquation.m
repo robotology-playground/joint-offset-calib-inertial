@@ -1,4 +1,4 @@
-function model = pwmModel1Sym( x,y )
+function model = filteredNormalEquation( x,y )
 %pwmModel1Sym Computes the closed-form solution to linear regression 
 %   using the normal equations.
 %   

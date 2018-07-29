@@ -63,7 +63,7 @@ switch loadSource
     case 'dumpFile'
         % build sensor data parser
         plot = false; loadJointPos = true;
-        data = SensorsData(dataPath,'',subSamplingSize,...
+        data = SensorsData(dataPath,subSamplingSize,...
             timeStart,timeStop,plot,calibrationMap);
         data.buildInputDataSet(loadJointPos,modelParams);
         

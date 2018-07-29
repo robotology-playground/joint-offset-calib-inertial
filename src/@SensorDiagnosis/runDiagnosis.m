@@ -46,12 +46,12 @@ switch loadSource
     case 'dumpFile'
         % Build input data without calibration applied
         plot = false;
-        data.bc = SensorsData(dataPath,'',subSamplingSize,...
+        data.bc = SensorsData(dataPath,subSamplingSize,...
             timeStart,timeStop,plot);
         [~,sensMeasCell.bc] = data.bc.buildInputDataSet(loadJointPos,modelParams);
         
         % Build input data with calibration applied
-        data.ac = SensorsData(dataPath,'',subSamplingSize,...
+        data.ac = SensorsData(dataPath,subSamplingSize,...
             timeStart,timeStop,plot,calibrationMap);
         [sensorsIdxListFile,sensMeasCell.ac] = data.ac.buildInputDataSet(loadJointPos,modelParams);
         

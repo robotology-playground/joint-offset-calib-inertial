@@ -1,4 +1,4 @@
-function [seqHomeParams,seqEndParams,selector] = getSeqProfile(task,taskSpecificParams)
+function [seqHomeParams,seqEndParams,selector] = getSeqProfile(task,taskSpecificParams,robotModel)
 %getSeqProfile Loads the sequence profile parameters from a script ini file
 %   The script holding the sequence parameters is selected by the tag 'seqProfileTag' 
 
@@ -11,7 +11,7 @@ switch task
     case JointEncodersCalibrator.task
         run jointsCalibratorSequenceProfileWOsuspend;
     case AccelerometersCalibrator.task
-        run accelerometersCalibratorSequenceProfileWOsuspend;
+        run accelerometersCalibratorSequenceProfileWOsuspend; % robotModel used here
     case SensorDataAcquisition.task
         run(taskSpecificParams.motionSeqProfile);
     case LowlevTauCtrlCalibrator.task

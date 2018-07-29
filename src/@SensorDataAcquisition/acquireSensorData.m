@@ -10,7 +10,7 @@ function acqSensorDataAccessor = acquireSensorData(...
 
 % Load sequence profile parameters
 [seqHomeParams,seqEndParams,selector] = ...
-    SensorDataAcquisition.getSeqProfile(task,taskSpecificParams);
+    SensorDataAcquisition.getSeqProfile(task,taskSpecificParams,robotModel);
 
             
 %% Build the Map sequences from input parameters

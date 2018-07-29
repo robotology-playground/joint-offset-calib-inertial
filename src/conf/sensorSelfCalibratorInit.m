@@ -10,6 +10,8 @@ modelPath = '../models/iCubGenova04/model.urdf';
 %calibrationMapFile = '../../data/calibration/calibrationMap_#6.mat';
 calibrationMapFile = 'calibrationMap.mat';
 %calibrationMapFile = '';
+isModelOnline = RobotModel.isOnline;
+isModelOnline.value = true;
 
 %% Standard or custom calibration
 calibrationType = 'standard';

@@ -2,13 +2,14 @@ classdef Regressors < handle
     %UNTITLED8 Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties
+    properties(Constant)
+        pwmModel1Sym = @Regressors.filteredNormalEquation;
     end
     
     methods (Static=true)
         [thetaPos,thetaNeg] = normalEquationAsym(x,y);
         
-        model = pwmModel1Sym(x,y);
+        model = filteredNormalEquation(x,y);
         
         model = frictionModel1Sym(x,y);
         
