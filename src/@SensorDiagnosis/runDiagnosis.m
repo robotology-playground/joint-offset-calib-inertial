@@ -127,8 +127,8 @@ if savePlot
     fprintf(fileID,'modelPath = %s\n',model.urdfModelFile);
     fprintf(fileID,'dataPath = %s\n',dataPath);
     fprintf(fileID,'calibration map :\n');
-    fprintf(fileID,'\t sensors = %s\n',calibrationMap.keys);
-    fprintf(fileID,'\t values = %f\n',calibrationMap.values);
+    fprintf(fileID,'\t sensors = %s\n',UI.cellArrayOfStr2str(', ',calibrationMap.keys));
+%    fprintf(fileID,'\t values = %f\n',UI.cellArrayOfStr2str(', ',calibrationMap.values));
     fprintf(fileID,'iterator = %d\n',iterator);
     fclose(fileID);
 end
