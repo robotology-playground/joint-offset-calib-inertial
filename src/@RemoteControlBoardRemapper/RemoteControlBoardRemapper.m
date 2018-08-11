@@ -53,6 +53,12 @@ classdef RemoteControlBoardRemapper < handle
         axesNames; axesList; remoteControlBoards; remoteControlBoardsList;
         options;
         driver;
+        iencs@IEncoders;          % IEncoders interface for reading joint encoders position and velocity
+        imotorencs@IMotorEncoders % IMotorEncoders interface for reading motor encoders position and velocity
+        ipos@IPositionControl;    % IPositionControl interface for joint position control settings
+        ivel@IVelocityControl;    % IVelocityControl interface for joint velocity control settings
+        ipwm@IPWMControl;         % IPWMControl interface for motor PWM control settings
+        yarpVector@yarp.Vector;   % Temp buffer vector yarp.Vector of same size as 'jointsList' for read/write purposes
     end
     
     methods
@@ -81,6 +87,9 @@ classdef RemoteControlBoardRemapper < handle
             % Create a bottle with a list of the axis control boards
             obj.remoteControlBoards = yarp.Bottle();
             obj.remoteControlBoardsList = obj.remoteControlBoards.addList();
+            
+            % Initialize other values
+            obj.yarpVector = yarp.Vector();
         end
         
         % Destructor
@@ -92,24 +101,25 @@ classdef RemoteControlBoardRemapper < handle
         open(obj,partList)
         
         % Close ports
-        function close(obj)
-            obj.driver.close();
-        end
+        close(obj);
         
-        % Read joint encoders
+        % Read/write joint encoders
         [readEncs] = getEncoders(obj);
+        ok         = setEncoders(obj,desiredPosMat,refType,refParamsMat,wait,varargin);
+
+        % Wait for motion to be completed
+        ok = waitMotionDone(obj,timeout);
         
+        % Read/write joint velocities
+        [readEncSpeeds] = getEncoderSpeeds(obj);
+        ok              = setJointRefAccelerations(obj,refAccelerations);
+        ok              = velocityMove(obj,desiredVelocities);
+
         % Read motor encoders
         [readEncs,timeEncs] = getMotorEncoders(obj,motorsIdxList);
         
         % Read motor encoder speeds
         [readEncSpeeds] = getMotorEncoderSpeeds(obj,motorsIdxList);
-        
-        % Write joint encoders
-        ok = setEncoders(obj,desiredPosMat,refType,refParamsMat,wait,varargin);
-        
-        % Wait for motion to be completed
-        ok = waitMotionDone(obj,timeout);
         
         % Get joints indexes as per the control board remapper mapping
         [jointsIdxList,matchingBitmap] = getJointsMappedIdxes(obj,jointNameList);
@@ -126,23 +136,21 @@ classdef RemoteControlBoardRemapper < handle
         % Get motors indexes as per the control board remapper mapping
         [motorsIdxList,matchingBitmap] = getMotorsMappedIdxes(obj,motorNameList);
         
-        % Set/Get control mode for a set of joint indexes. Supported modes are:
+        % Get/set control mode for a set of joint indexes. Supported modes are:
         % Position, Open loop (applicable for PWM, torque, current).
-        ok = setJointsControlMode(obj,jointsIdxList,mode);
         [ok, modes] = getJointsControlMode(obj,jointsIdxList);
+        ok          = setJointsControlMode(obj,jointsIdxList,mode);
         
         % Get motor PIDs
         [readPids,readPidsMat] = getMotorsPids(obj,pidCtrlMode,motorsIdxList);
         
-        % Set the desired PWM values for a set of motor indexes (for
-        % calibration purpose). The motor indexes are the same as for the
+        % Get/set the desired PWM values (0-100%) for a set of motor indexes 
+        % (for calibration purpose). The motor indexes are the same as for the
         % joints. There is no concept of coupled motors in the control board
         % remapper. But if a coupled motor is set to a given control mode,
         % then all the motors in the coupling are set to the same mode.
-        ok = setMotorsPWM(obj,motorsIdxList,pwmVec);
-        
-        % Get the PWM values (0-100%) for a set of motor indexes
         [pwmVec] = getMotorsPWM(obj,motorsIdxList);
+        ok       = setMotorsPWM(obj,motorsIdxList,pwmVec);
         
         % Set the desired PWM value (0-100%) for the named motor
         ok = setMotorPWM(obj,motorName,pwm);

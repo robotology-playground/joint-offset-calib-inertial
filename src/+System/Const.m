@@ -8,6 +8,8 @@ classdef Const < uint8
         ThreadTEST(2)
         Degrees(3)
         Radians(4)
+        waitMotionDone(1)
+        DontWaitMotionDone(0)
     end
     
 end
