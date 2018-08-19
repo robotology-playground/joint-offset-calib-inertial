@@ -28,7 +28,7 @@ classdef SensorMeasurementsEstimator < handle
     end
     
     methods
-        function obj = SensorMeasurementsEstimator(modelName,modelPath)
+        function obj = SensorMeasurementsEstimator(modelName,modelPath,varargin)
             % save model name
             obj.modelName = modelName;
             
@@ -36,7 +36,16 @@ classdef SensorMeasurementsEstimator < handle
             obj.estimator = iDynTree.ExtWrenchesAndJointTorquesEstimator();
             
             % Load model and sensors from the URDF file
-            obj.estimator.loadModelAndSensorsFromFile(modelPath);
+            if (numel(varargin)==0)
+                obj.estimator.loadModelAndSensorsFromFile(modelPath);
+            elseif (numel(varargin)==2)
+                aModel = varargin{1};
+                aSensorsList = varargin{2};
+                obj.estimator.setModelAndSensors(aModel,aSensorsList);
+            else
+                error('Wrong number of input arguments!');
+            end
+            
             obj.nbFTs = obj.estimator.sensors.getNrOfSensors(iDynTree.SIX_AXIS_FORCE_TORQUE);
             obj.nbAccs = obj.estimator.sensors.getNrOfSensors(iDynTree.ACCELEROMETER);
             obj.nbGyros = obj.estimator.sensors.getNrOfSensors(iDynTree.GYROSCOPE);
@@ -119,5 +128,11 @@ classdef SensorMeasurementsEstimator < handle
         
         % Computes the predicted sensor measurements
         [FTsMeas,AccsMeas,GyrosMeas,ThAxAngAccsMeas,ThAxFTsMeas] = getEstimatedMeasurements(obj,q,dq,d2q,gravity);
+    end
+    
+    methods(Static)
+        % Create sensors to be added to a desired link. Supported sensors:
+        % ACCELEROMETER,GYROSCOPE,THREE_AXIS_ANGULAR_ACCELEROMETER.
+        sensorList = createSensorList(model,sensorTypes,sensorNames,parentLinkNames,linkSensorHtransforms);
     end
 end

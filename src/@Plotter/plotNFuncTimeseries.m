@@ -1,7 +1,7 @@
 function figH = plotNFuncTimeseries(...
     figuresHandler,aTitle,aLabel,yLabel,...    % params irrelevant if figH is not empty
     time,Y,yLegends,...                               % params always required
-    lineStyles,lineWidth,markerCycle,figH,resetPlot) % params always required
+    lineStyles,lineWidth,markerCycle,figH,resetPlot,alphas) % params always required
 %Plots y1(t), y2(t),...,yn(t) on the same axis.
 %   Plots several timeseries functions y(time) with a single y axis,
 %   using a default set of colors.
@@ -30,13 +30,16 @@ if isempty(figH)
     % If the figure is not docked, use the below command to display it full
     % screen.
     %set(gcf,'PositionMode','manual','Units','normalized','outerposition',[0 0 1 1]);
-    title(aTitle,'FontWeight','bold');
+    title(aTitle,'FontWeight','bold','Interpreter','latex');
     grid on;
     xlabel('Time (sec)');
     ylabel(yLabel);
     set(gca,'FontSize',24);
     lg=legend('Location','BestOutside');
     lg.set('Interpreter','latex');
+    
+    % Save fugure label
+    figH.UserData = aLabel;
 else
     figure(figH);
 end
@@ -47,6 +50,10 @@ if (isempty(resetPlot) || resetPlot)
     % clear plot line and reset the ColorOrderIndex and LineStyleOrderIndex
     % axes properties to 1.
     set(gca,'Nextplot','replacechildren');
+end
+
+if isempty(markerCycle)
+    markerCycle = 1;
 end
 
 % Define the line colors
@@ -62,6 +69,13 @@ yLegends = yLegends(1:size(Y,2));
 p = plot(timeYnColors{:},'MarkerIndices',1:markerCycle:numel(time),'lineWidth',lineWidth);
 
 [p.DisplayName]=deal(yLegends{:});
+
+% Transparency
+if exist('alphas','var')
+    for idx = 1:numel(alphas)
+        p(idx).Color(4)=alphas(idx);
+    end
+end
 
 hold off
 

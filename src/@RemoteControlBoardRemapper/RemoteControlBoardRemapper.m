@@ -52,12 +52,12 @@ classdef RemoteControlBoardRemapper < handle
         % YARP objects
         axesNames; axesList; remoteControlBoards; remoteControlBoardsList;
         options;
-        driver;
-        iencs@IEncoders;          % IEncoders interface for reading joint encoders position and velocity
-        imotorencs@IMotorEncoders % IMotorEncoders interface for reading motor encoders position and velocity
-        ipos@IPositionControl;    % IPositionControl interface for joint position control settings
-        ivel@IVelocityControl;    % IVelocityControl interface for joint velocity control settings
-        ipwm@IPWMControl;         % IPWMControl interface for motor PWM control settings
+        driver@yarp.PolyDriver;
+        iencs@yarp.IEncoders;          % IEncoders interface for reading joint encoders position and velocity
+        imotorencs@yarp.IMotorEncoders % IMotorEncoders interface for reading motor encoders position and velocity
+        ipos@yarp.IPositionControl;    % IPositionControl interface for joint position control settings
+        ivel@yarp.IVelocityControl;    % IVelocityControl interface for joint velocity control settings
+        ipwm@yarp.IPWMControl;         % IPWMControl interface for motor PWM control settings
         yarpVector@yarp.Vector;   % Temp buffer vector yarp.Vector of same size as 'jointsList' for read/write purposes
     end
     
@@ -98,7 +98,7 @@ classdef RemoteControlBoardRemapper < handle
         end
         
         % Open ports
-        open(obj,partList)
+        open(obj,partList,jointsList)
         
         % Close ports
         close(obj);
@@ -106,7 +106,7 @@ classdef RemoteControlBoardRemapper < handle
         % Read/write joint encoders
         [readEncs] = getEncoders(obj);
         ok         = setEncoders(obj,desiredPosMat,refType,refParamsMat,wait,varargin);
-
+        
         % Wait for motion to be completed
         ok = waitMotionDone(obj,timeout);
         
@@ -114,7 +114,10 @@ classdef RemoteControlBoardRemapper < handle
         [readEncSpeeds] = getEncoderSpeeds(obj);
         ok              = setJointRefAccelerations(obj,refAccelerations);
         ok              = velocityMove(obj,desiredVelocities);
-
+        
+        % Read/write joint accelerations
+        [readEncAccs] = getEncoderAccelerations(obj);
+        
         % Read motor encoders
         [readEncs,timeEncs] = getMotorEncoders(obj,motorsIdxList);
         
