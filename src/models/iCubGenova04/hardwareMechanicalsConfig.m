@@ -82,10 +82,10 @@ right_leg.matrixM2J = {...
 
 % torso parameters
 axisConfig = {...
-    'torso_yaw' 'torso_roll' 'torso_pitch'   % AxisName
-    'torso_m1'  'torso_m2'   'torso_m3'      % MotorName
-    32000       32000        32000           % fullscalePWM
-    -100.00     -100.00      -100.00      }; % Gearbox_M2J
+    'torso_roll' 'torso_pitch' 'torso_yaw'     % AxisName
+    'torso_m1'   'torso_m2'    'torso_m3'      % MotorName
+    32000        32000         32000           % fullscalePWM
+    -100.00      -100.00       -100.00      }; % Gearbox_M2J
 
 torso.jointNames   = axisConfig(1,:);
 torso.motorNames   = axisConfig(2,:);

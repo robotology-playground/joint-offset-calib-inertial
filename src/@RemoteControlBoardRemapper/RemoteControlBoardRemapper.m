@@ -126,6 +126,9 @@ classdef RemoteControlBoardRemapper < handle
         % Read motor encoder speeds
         [readEncSpeeds] = getMotorEncoderSpeeds(obj,motorsIdxList);
         
+        % Read motor encoder accelerations
+        [readEncAccelerations] = getMotorEncoderAccelerations(obj,motorsIdxList);
+        
         % Get joints indexes as per the control board remapper mapping
         [jointsIdxList,matchingBitmap] = getJointsMappedIdxes(obj,jointNameList);
         
