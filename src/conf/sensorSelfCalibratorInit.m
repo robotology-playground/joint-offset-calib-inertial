@@ -23,8 +23,8 @@ calibrateAccelerometers = false;
 calibrateJointEncoders  = false;
 calibrateFTsensors      = false;
 calibrateGyroscopes     = false;
-calibrateLowLevTauCtrl  = true;
-calibrateLowLevCurrCtrl = false;
+calibrateLowLevTauCtrl  = false;
+calibrateLowLevCurrCtrl = true;
 
 %% Diagnosis and visualization
 runDiagnosis = true;
@@ -304,7 +304,7 @@ clear calibedParts calibedJointsIdxes savePlot exportPlot loadJointPos ...
 
 % Calibrated parts:
 % Only the joint parameters from these parts (limbs) will be calibrated
-calibedParts = {'right_leg'};
+calibedParts = {'torso'};
 
 % Fine selection of joints to calibrate:
 % Select the joints to calibrate through the respective indexes. These indexes match 

@@ -58,7 +58,7 @@ classdef JdesktopHandler
             editorApp.close;
             % Open restored list of files
             for file = allEditorFilenames(:)'
-                open (cell2mat(file));
+                if exist(file{:},'file'), open(cell2mat(file)); end
             end
         end
     end
