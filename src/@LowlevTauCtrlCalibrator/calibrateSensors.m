@@ -58,8 +58,7 @@ data.buildInputDataSet(loadJointPos,dataLoadingParams);
 tauJoints  = data.parsedParams.(['tau_' jointMotorCoupling.part '_state']);
 
 % Get respective currents (matrix 6xNsamples)
-currMotorG  = data.parsedParams.(['curr_' jointMotorCoupling.part '_state']);
-currMotorG = currMotorG(motorIdx,:);
+currMotorG  = data.parsedParams.(['curr_' jointMotorCoupling.part '_state'])(motorIdx,:);
 
 % FRICTION parameters
 %
@@ -187,5 +186,6 @@ end
 
 % Plot fitted model over acquired data.
 obj.plotModel(frictionOrKtau,fittedModelTau,xVar_tau,1000);
+obj.plotModel(frictionOrKtau,fittedModelCurr,xVar_curr,1000);
 
 end

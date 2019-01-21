@@ -5,6 +5,7 @@ clc
 
 %Clear static data
 clear classes;
+System.clearTimers();
 
 % Create YARP Network device, for initializing YARP classes for communication
 yarp.Network.init();

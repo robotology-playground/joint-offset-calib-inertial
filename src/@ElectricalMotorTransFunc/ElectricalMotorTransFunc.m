@@ -1,10 +1,5 @@
 classdef ElectricalMotorTransFunc < handle
     %This class groups all the electrical motor transfer function parameters
-    %   The transfer function parameters are:
-    %   - name: motor name
-    %   - k_pwm2i: k_{pwm,i}
-    %   - k_bemf : k_{bemf}
-    %   - i_offset: i_{offset}
     %   The motor current equation is:
     %   i_m = k_pwm2i * PWM + k_bemf * dq_m + i_offset
     
@@ -12,38 +7,38 @@ classdef ElectricalMotorTransFunc < handle
         motorName2motorID = containers.Map(...
             {'l_hip_pitch_m','l_hip_roll_m','l_hip_yaw_m','l_knee_m','l_ankle_pitch_m','l_ankle_roll_m',...
             'r_hip_pitch_m','r_hip_roll_m','r_hip_yaw_m','r_knee_m','r_ankle_pitch_m','r_ankle_roll_m',...
-            'torso_yaw_m','torso_roll_m','torso_pitch_m',...
-            'l_shoulder_pitch','l_shoulder_roll','l_shoulder_yaw','l_elbow',...
-            'r_shoulder_pitch','r_shoulder_roll','r_shoulder_yaw','r_elbow'},...
+            'torso_m1','torso_m2','torso_m3',...
+            'l_shoulder_m1','l_shoulder_m2','l_shoulder_m3','l_elbow_m',...
+            'r_shoulder_m1','r_shoulder_m2','r_shoulder_m3','r_elbow_m'},...
             {'3B6M0','3B6M1','3B5M0','3B5M1','3B7M0','3B7M1',...
             '3B9M0','3B9M1','3B8M0','3B8M1','3B10M0','3B10M1',...
-            '0B4M0','0B3M0','0B3M1',...
+            '0B3M0','0B3M1','0B4M0',...
             '1B0M0','1B0M1','1B1M0','1B1M1',...
             '2B0M0','2B0M1','2B1M0','2B1M1'});
     end
     
     properties(GetAccess=public, SetAccess=protected)
-        name@char;
-        k_pwm2i = 0;
-        k_bemf = 0;
-        i_offset = 0;
-        KpwmUnits@char;
-        KbemfUnits@char;
-        offsetUnits@char;
+        name@char;         % motor name
+        k_pwm2i = 0;       % k_{pwm,i}
+        k_bemf = 0;        % k_{bemf}
+        i_offset = 0;      % i_{offset}
+        kpwm2iUnits@char;  % k_{pwm,i} units
+        kbemfUnits@char;   % k_{bemf} units
+        ioffsetUnits@char; % i_{offset} units
     end
     
     methods(Access=protected)
         % Constructor
-        function obj = ElectricalMotorTransFunc(motorName,KpwmUnits,KbemfUnits,offsetUnits)
+        function obj = ElectricalMotorTransFunc(motorName,kpwm2iUnits,kbemfUnits,ioffsetUnits)
             obj.name = motorName;
             if nargin == 4
-                obj.KpwmUnits = KpwmUnits;
-                obj.KbemfUnits = KbemfUnits;
-                obj.offsetUnits = offsetUnits;
+                obj.kpwm2iUnits = kpwm2iUnits;
+                obj.kbemfUnits = kbemfUnits;
+                obj.ioffsetUnits = ioffsetUnits;
             else
-                obj.KpwmUnits = '\frac{A}{dutycycle}';
-                obj.KbemfUnits = '\frac{A}{rad \cdot s^{-1}}';
-                obj.offsetUnits = 'A';
+                obj.kpwm2iUnits = '\frac{A}{dutycycle}';
+                obj.kbemfUnits = '\frac{A}{rad \cdot s^{-1}}';
+                obj.ioffsetUnits = 'A';
             end
         end
     end
@@ -76,11 +71,11 @@ classdef ElectricalMotorTransFunc < handle
                 case 'right_leg'
                     keyList = {'r_hip_pitch_m','r_hip_roll_m','r_hip_yaw_m','r_knee_m','r_ankle_pitch_m','r_ankle_roll_m'};
                 case 'torso'
-                    keyList = {'torso_yaw_m','torso_roll_m','torso_pitch_m'};
+                    keyList = {'torso_m1','torso_m2','torso_m3'};
                 case 'left_arm'
-                    keyList = {'l_shoulder_pitch','l_shoulder_roll','l_shoulder_yaw','l_elbow'};
+                    keyList = {'l_shoulder_m1','l_shoulder_m2','l_shoulder_m3','l_elbow_m'};
                 case 'right_arm'
-                    keyList = {'r_shoulder_pitch','r_shoulder_roll','r_shoulder_yaw','r_elbow'};
+                    keyList = {'r_shoulder_m1','r_shoulder_m2','r_shoulder_m3','r_elbow_m'};
                 otherwise
             end
             
@@ -99,9 +94,9 @@ classdef ElectricalMotorTransFunc < handle
         
         function  setUnits(calibrationMap)
             for elem = calibrationMap.values
-                elem{:}.KpwmUnits = '\frac{A}{dutycycle}';
-                elem{:}.KbemfUnits = '\frac{A}{rad \cdot s^{-1}}';
-                elem{:}.offsetUnits = 'A';
+                elem{:}.kpwm2iUnits = '\frac{A}{dutycycle}';
+                elem{:}.kbemfUnits = '\frac{A}{rad \cdot s^{-1}}';
+                elem{:}.ioffsetUnits = 'A';
             end
         end
     end
@@ -120,9 +115,9 @@ classdef ElectricalMotorTransFunc < handle
         end
         function copyObj = copy(obj)
             copyObj = ElectricalMotorTransFunc(obj.name);
-            copyObj.Kpwm = obj.Kpwm;
-            copyObj.Kbemf = obj.Kbemf;
-            copyObj.offset = obj.offset;
+            copyObj.k_pwm2i = obj.k_pwm2i;
+            copyObj.k_bemf = obj.k_bemf;
+            copyObj.i_offset = obj.i_offset;
         end
         
         % Print the parameters of a single motor following the format 1:
@@ -131,15 +126,15 @@ classdef ElectricalMotorTransFunc < handle
         function [aString,values] = print1(obj,includeHeader)
             if includeHeader
                 aString = [...
-                    '| joint | motor | $k_{PWM}\\ [', strrep(obj.KpwmUnits,'\','\\'), ...
-                    ']$ | $k_{bemf}\\ [', strrep(obj.KbemfUnits,'\','\\'), ...
-                    ']$ |  $i_{offset}\\ [', strrep(obj.offsetUnits,'\','\\'), ']$ |\n',...
+                    '| joint | motor | $k_{pwm,i}\\ [', strrep(obj.kpwm2iUnits,'\','\\'), ...
+                    ']$ | $k_{bemf}\\ [', strrep(obj.kbemfUnits,'\','\\'), ...
+                    ']$ |  $i_{offset}\\ [', strrep(obj.ioffsetUnits,'\','\\'), ']$ |\n',...
                     '| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |\n'];
             else
                 aString = '';
             end
             aString = [aString ' | `' strrep(obj.name,'_m','') '` | `' ElectricalMotorTransFunc.motorName2motorID(obj.name) '` | %0.4f | %0.4f | %0.4f |\n'];
-            values = {obj.Kpwm,obj.Kbemf,obj.offset};
+            values = {obj.k_pwm2i,obj.k_bemf,obj.i_offset};
         end
     end
     

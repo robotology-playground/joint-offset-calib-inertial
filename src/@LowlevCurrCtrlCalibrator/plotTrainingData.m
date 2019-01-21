@@ -73,7 +73,7 @@ time = data.parsedParams.time;
 [~,motorIdx] = ismember(motorName,jointMotorCoupling.coupledMotors);
 
 % Get respective currents (matrix 6xNsamples)
-currMotorG  = data.parsedParams.(['curr_' jointMotorCoupling.part '_state']);
+currMotorG  = data.parsedParams.(['curr_' jointMotorCoupling.part '_state'])(motorIdx,:);
 time = data.parsedParams.(['time_' jointMotorCoupling.part '_state']);
 
 switch frictionOrKcurr

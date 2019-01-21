@@ -55,7 +55,7 @@ data.buildInputDataSet(loadJointPos,dataLoadingParams);
 [~,motorIdx] = ismember(motorName,jointMotorCoupling.coupledMotors);
 
 % Get respective currents (matrix 6xNsamples)
-currMotorG  = data.parsedParams.(['curr_' jointMotorCoupling.part '_state']);
+currMotorG  = data.parsedParams.(['curr_' jointMotorCoupling.part '_state'])(motorIdx,:);
 
 switch frictionOrKcurr
     case 'friction'

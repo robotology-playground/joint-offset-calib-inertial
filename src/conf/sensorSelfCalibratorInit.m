@@ -3,8 +3,10 @@
 %====================================================================
 
 %% Common model and calibration input parameters
-modelName = 'iCubGenova04'; % as the models defined in 'icub-models' repo
-% modelName = 'icubGazeboSim'; % as the models defined in 'icub-models' repo
+% Select one of the models defined in 'icub-models' repo:
+% 'iCubGenova04', 'icubGazeboSim', 'iCubGazeboV2_5', ...
+modelName = 'iCubGenova04';
+
 dataPath  = '../../data/dumper';
 % modelPath = '../models/icubSim/model.urdf';
 modelPath = '../models/iCubGenova04/model.urdf';
@@ -245,7 +247,7 @@ clear calibedParts calibedJointsIdxes mtbSensorAct savePlot exportPlot loadJoint
 
 % Calibrated parts:
 % Only the joint parameters from these parts (limbs) will be calibrated
-calibedParts = {'torso'};
+calibedParts = {'left_leg'};
 
 % Fine selection of joints to calibrate:
 % Select the joints to calibrate through the respective indexes. These indexes match 
@@ -270,7 +272,7 @@ calibedParts = {'torso'};
 %=================================================================
 calibedJointsIdxes.left_arm = 0:3;
 calibedJointsIdxes.right_arm = 0:3;
-calibedJointsIdxes.left_leg = 0:5;
+calibedJointsIdxes.left_leg = 1;
 calibedJointsIdxes.right_leg = 0:5;
 calibedJointsIdxes.torso = 0:2;
 calibedJointsIdxes.head = 0:2;
@@ -329,9 +331,9 @@ calibedParts = {'torso'};
 %=================================================================
 calibedJointsIdxes.left_arm = 0:3;
 calibedJointsIdxes.right_arm = 0:3;
-calibedJointsIdxes.left_leg = 0:5;
+calibedJointsIdxes.left_leg = 1;
 calibedJointsIdxes.right_leg = 0:5;
-calibedJointsIdxes.torso = 0:2;
+calibedJointsIdxes.torso = 0:1;
 calibedJointsIdxes.head = 0:2;
 
 % Save generated figures: if this flag is set to true, all data is saved and figures 
