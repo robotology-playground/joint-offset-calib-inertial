@@ -94,7 +94,7 @@ switch frictionOrKcurr
         end
         % Run a fitting again but matching a single Kv and removing the
         % offset
-        fittedModel = Regressors.normalEquation(xVar',currMotorG'-calib.offset);
+        fittedModel = Regressors.normalEquation(xVar',currMotorG'-calib.i_offset);
         if abs(fittedModel.theta(1))>1e-3 % Tau offset
             warning('calibrateSensors: There is a current offset in the model motor velocity to current !!');
         end
@@ -110,8 +110,8 @@ switch frictionOrKcurr
         end
         % Run a fitting again but matching a single Kcurr
         fittedModel = Regressors.normalEquation(xVar',currMotorG');
-        calib.setOffset(fittedModel.theta(1));
-        calib.setKpwm(fittedModel.theta(2));
+        calib.setIoffset(fittedModel.theta(1));
+        calib.setKpwm2i(fittedModel.theta(2));
         
     otherwise
         error('calibrateSensors: unknown calibration type !!');

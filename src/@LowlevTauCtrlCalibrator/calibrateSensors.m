@@ -172,14 +172,14 @@ switch frictionOrKtau
         % CURR CTRL
         % Run a fitting again but matching a single Kcurr
         fittedModelCurr = Regressors.normalEquation(xVar_curr',currMotorG');
-        calib.setCurrOffset(fittedModelCurr.theta(1));
-        calib.setKcurr(fittedModelCurr.theta(2));
+        calib.setIoffset(fittedModelCurr.theta(1));
+        calib.setKpwm2i(fittedModelCurr.theta(2));
         
         % CURR TO TORQUE CTRL
-        calib.computeKtau();
+        calib.computeKt();
         calib.computeKvmech(jointMotorCoupling.gearboxDqM2Jratios{motorIdx});
         
-        calib
+        disp(calib);
         
     otherwise
         error('calibrateSensors: unknown calibration type !!');

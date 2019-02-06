@@ -1,17 +1,18 @@
 classdef ElectricalMotorTransFunc < handle
     %This class groups all the electrical motor transfer function parameters
     %   The transfer function parameters are:
-    %   - Kpwm
-    %   - Kbemf
-    %   - offset
+    %   - name: motor name
+    %   - k_pwm2i: k_{pwm,i}
+    %   - k_bemf : k_{bemf}
+    %   - i_offset: i_{offset}
     %   The motor current equation is:
-    %   i_m = kpwm * PWM + kbemf * dq_m'
+    %   i_m = k_pwm2i * PWM + k_bemf * dq_m + i_offset
     
     properties(GetAccess=public, SetAccess=protected)
         name@char;
-        Kpwm = 0;
-        Kbemf = 0;
-        offset = 0;
+        k_pwm2i = 0;
+        k_bemf = 0;
+        i_offset = 0;
     end
     
     methods(Access=protected)
@@ -44,11 +45,17 @@ classdef ElectricalMotorTransFunc < handle
     end
     
     methods(Access=public)
-        function setKpwm(obj,Kpwm), obj.Kpwm = Kpwm; end
+        function setKpwm2i(obj,k_pwm2i), obj.k_pwm2i = k_pwm2i; end
         
-        function setKbemf(obj, Kbemf), obj.Kbemf = Kbemf; end
+        function setKbemf(obj, k_bemf), obj.k_bemf = k_bemf; end
         
-        function setOffset(obj,offset), obj.offset = offset; end
+        function setIoffset(obj,i_offset), obj.i_offset = i_offset; end
+        
+        function convertFromOldFormat(obj)
+            obj.k_pwm2i = obj.Kpwm;
+            obj.k_bemf = obj.Kbemf;
+            obj.i_offset = obj.offset;
+        end
     end
     
 end
