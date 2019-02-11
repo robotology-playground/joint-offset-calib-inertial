@@ -31,6 +31,10 @@ classdef FullMotorTransFunc < handle
             % Return the handle on the newly created or already existing
             % FullMotorTransFunc object.
             transFunc = calibrationMap(motorName);
+            % Check if the type is valid
+            if ~isa(transFunc,'FullMotorTransFunc')
+                error('Wrong calibrationMap element class!!');
+            end
         end
         
         function isEq = eq(aTransFunc,anotherTransFunc)

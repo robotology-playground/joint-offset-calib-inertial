@@ -8,7 +8,6 @@ clear
 close all
 clc
 
-System.clearTimers()
 %Clear static data
 clear classes;
 clear functions;

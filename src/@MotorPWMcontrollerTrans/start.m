@@ -5,7 +5,7 @@ function ok = start(obj)
 obj.start@MotorPWMcontroller();
 
 % Load sampling and timeout parameters
-config = Init.load('lowLevTauCtrlCalibratorDevConfig');
+config = Init.load('lowLevCtrlCalibratorDevConfig');
 
 % run calibrated motor controller
 ok = obj.runMainMotorController(config.posCtrlEmulator.samplingPeriod,config.calibedMotCtrller.timeout);

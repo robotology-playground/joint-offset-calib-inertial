@@ -186,6 +186,5 @@ end
 
 % Plot fitted model over acquired data.
 obj.plotModel(frictionOrKtau,fittedModelTau,xVar_tau,1000);
-obj.plotModel(frictionOrKtau,fittedModelCurr,xVar_curr,1000);
 
 end

@@ -32,7 +32,7 @@ switch task
                 % run the profile script for friction identification
                 run lowLevTauCtrlCalibratorSequenceProfile1;
             case 'ktau'
-                % run the profile script for friction identification
+                % run the profile script for Kpwm identification
                 run lowLevTauCtrlCalibratorSequenceProfile3;
             otherwise
                 error('Unknown low level torque control calibration phase!');
@@ -45,8 +45,8 @@ switch task
                 % run the profile script for friction identification
                 run lowLevCurrCtrlCalibratorSequenceProfile1;
             case 'kcurr'
-                % run the profile script for friction identification
-                run lowLevCurrCtrlCalibratorSequenceProfile2;
+                % run the profile script for k_pwm2i identification
+                run lowLevTauCtrlCalibratorSequenceProfile3;
             otherwise
                 error('Unknown low level current control calibration phase!');
         end
